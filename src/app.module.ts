@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -29,9 +30,16 @@ import { ScheduleModule } from '@nestjs/schedule';
         url: config.get('POSTGRES_URL'),
         autoLoadEntities: true,
         synchronize: true,
+        extra: {
+          min: 10,
+          max: 50,
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: 2000,
+        }
       }),
     }),
     ScheduleModule.forRoot(),
+    UsersModule,
   ],
   controllers: [],
   providers: [],
